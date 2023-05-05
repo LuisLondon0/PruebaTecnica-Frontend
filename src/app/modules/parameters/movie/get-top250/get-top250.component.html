@@ -1,0 +1,54 @@
+<br>
+<!-- select que permite filtrar las peliculas por año -->
+<div class="row">
+    <div class="col s3">
+        <select [(ngModel)]="selectedOption" name="filter" class="blue lighten-3 ">
+            <option value="all">Mostrar todas las películas</option>
+            <option value="after2000">Películas del año 2000 en adelante</option>
+            <option value="between1980And2000">Películas entre 1980 y 2000</option>
+            <option value="before1980">Películas del año 1980 o anteriores</option>
+        </select>
+    </div>
+</div>
+
+<div>
+    <p>Click en el encabezado de la columna para ocultarla</p>
+    <!-- tabla para mostrar todos las peliculas que hayan en el Json -->
+    <table class="table">
+        <thead>
+            <tr>
+                <!-- funcion en la que a cada encabezado de columna se le pone un boton que al presionarlo la oculta -->
+                <th *ngFor="let column of columns" [hidden]="!column.visible">
+                    <a (click)="hideColumn(column)">{{ column.name }}</a>
+                </th>
+            </tr>
+            <!-- boton que aparece cuando hay columnas ocultas y que permite volver a mostrarlas -->
+            <tr *ngIf="areHiddenColumns()">
+                <th colspan="9">
+                    <a (click)="showAllColumns()">Mostrar todas las columnas</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let record of getPaginatedItems()">
+                <td *ngIf="columns[0].visible">{{ record.rank }}</td>
+                <td *ngIf="columns[1].visible">{{ record.title }}</td>
+                <td *ngIf="columns[2].visible">{{ record.year }}</td>
+                <td *ngIf="columns[3].visible"><img src="{{ record.image }}" width="100" height="150"></td>
+                <td *ngIf="columns[4].visible">{{ record.crew }}</td>
+                <td *ngIf="columns[5].visible">{{ record.imDbRating }}</td>
+                <td *ngIf="columns[6].visible">{{ record.imDbRatingCount }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- paginacion para mostrar de a 10 registros y no tener todos los registros de una sola -->
+    <div class="pagination">
+        <button class="btn waves-effect waves-light" [disabled]="currentPage === 1"
+            (click)="currentPage = currentPage - 1; scrollToTop()">Anterior</button>
+        <span>&nbsp;</span>
+        <button class="btn waves-effect waves-light" [disabled]="currentPage === getLastPage()"
+            (click)="currentPage = currentPage + 1; scrollToTop()">Siguiente</button>
+    </div>
+</div>
+<br>
